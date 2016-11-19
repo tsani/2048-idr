@@ -68,7 +68,7 @@ namespace All
       -> All P (x::xs)
 
 ||| Remove all empty tiles from a row. The resulting row will have size no
-||| greater than the input row, and is guaranteed to contain to empty tiles.
+||| greater than the input row, and is guaranteed to contain no empty tiles.
 filterEmpty
   : Row n
   -> (
@@ -79,9 +79,8 @@ filterEmpty (x::xs) with (filterEmpty xs)
   filterEmpty {n=sz + rem} (x::xs) | (sz ** (rem ** (Refl ** (xs' ** allNonEmpty))))
     = case decEmpty x of
       Left empty =>
-        (sz ** (S rem ** (?a ** (xs' ** allNonEmpty))))
-      Right nonEmpty =>
-        (S sz ** (rem ** (Refl ** (?b ** nonEmpty::allNonEmpty))))
+        (sz ** (S rem) ** (rewrite plusSuccRightSucc sz rem in Refl) ** xs' ** allNonEmpty)
+      Right nonEmpty => ((S sz) ** rem ** Refl ** x::xs' ** x::allNonEmpty)
 
 namespace Shifted
   ||| A shifted row has all its nonempty tiles in its head.
